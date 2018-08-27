@@ -1,0 +1,51 @@
+How to enable bluetooth in parrot linux
+---------------------------------------------------------
+To block the device in tlp, do the following
+
+Get the id of the bluetooth device from lsusb command
+
+shubham@mint ~ $ lsusb
+Bus 002 Device 003: ID 064e:930b Suyin Corp. 
+Bus 002 Device 002: ID 0438:7900 Advanced Micro Devices, Inc. 
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 003: ID 0bda:b006 Realtek Semiconductor Corp. 
+Bus 001 Device 002: ID 0438:7900 Advanced Micro Devices, Inc. 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Here, 0bda:b006, 064e:930b etc are ids.
+
+Let's say, 0bda:b006 is the offending device. Now open the tlp configuration file at /etc/default/tlp. I prefer nano editor, so use command sudo nano /etc/default/tlp
+
+Find the line that reads
+
+#USB_BLACKLIST="1111:2222 3333:4444"
+change it to
+
+USB_BLACKLIST="0bda:b006"
+change device id to the offending device id. Remove the#
+
+Reboot
+
+// I have tested it in linux mint and this works. No need to use the method below.
+------------------------------------------------------------
+I ran into this problem today after installing Linux Mint only to find out that I had to setup some stuff to get bluetooth working correctly. You can find the package that will allow you to connect to bluetooth devices here. After installing it and connecting successfully to my speaker however I got the weirdest error:
+
+Result: Connection Failed: Stream Setup Failed
+
+After searching around the internet I found how to fix it.
+
+1. Ensure pulse audio is installed with
+
+sudo apt-get install pulseaudio-module-bluetooth
+
+2. If it’s still not working run the command
+
+pactl load-module module-bluetooth-discover
+
+After running that command I was able to connect just fine with my tower stereo. Add this command to your startup and you should be good to go!
+-------------------------------------------------------------
+Source:
+
+https://forum.manjaro.org/t/bluetooth-adapter-cannot-be-turned-on-realtek-rtl8723be/10130/32
+https://zach-adams.com/2014/07/bluetooth-audio-sink-stream-setup-failed/
