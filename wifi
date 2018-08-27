@@ -1,0 +1,65 @@
+1. Online mode
+If you get a temporary internet connection, open a terminal ( ctrl + alt + T )
+
+sudo apt-get install linux-headers-generic build-essential git
+git clone https://github.com/lwfinger/rtlwifi_new/tree/rock.new_btcoex
+cd rock.new_btcoex
+make
+sudo make install
+
+2. Offline mode
+- get Realtek RTL8723BE PCIe Wireless driver  here
+- save to your usb pendrive.
+- copied and extract rock.new_btcoex.zip to your ubuntu/linux mint local folder
+- right click on rock.new_btcoex folder and choose "open in terminal".
+- Install RTL8723BE PCIe Wifi driver 
+make
+sudo make install
+
+A. Then, check antenna sel
+modinfo -p rtl8723be
+
+ex result :
+modinfo -p rtl8723be
+swlps: (bool)
+swenc:using hardware crypto (default 0 [hardware])
+(bool)
+ips:using no link power save (default 1 is open)
+(bool)
+fwlps:using linked fw control power save (default 1 is open)
+(bool)
+msi:Set to 1 to use MSI interrupts mode (default 0)
+(bool)
+debug:Set debug level (0-5) (default 0) (int)
+disable_watchdog:Set to 1 to disable the watchdog (default 0)
+(bool)
+ant_sel:Set to 1 or 2 to force antenna number (default 0)
+(int)
+
+B. Tes antenna sel
+it means there are 2 antenna sels, next try each antenna sell to know which works:
+sudo modprobe -r rtl8723be
+sudo modprobe rtl8723be ant_sel=1
+iwlist scan | egrep -i 'ssid|level'
+or 
+sudo modprobe -r rtl8723be
+sudo modprobe rtl8723be ant_sel=2
+iwlist scan | egrep -i 'ssid|level'
+Ex result
+Wifi signal not found arrow_downward 
+lo        Interface doesn't support scanning.
+enp1s0    Interface doesn't support scanning.
+Wifi signal found arrow_downward 
+lo        Interface doesn't support scanning.
+enp1s0    Interface doesn't support scanning.
+                    Quality=64/70  Signal level=-46 dBm  
+                    ESSID:"wifi network1"
+                    Quality=65/80  Signal level=-46 dBm  
+                    ESSID:"wifi network2"
+
+C. Set antenna sel If your antenna sel 1 find wifi signal then, do this. 
+echo "options rtl8723be ant_sel=1" | sudo tee -a /etc/modprobe.d/rtl8723be.conf
+If your antenna sel 2 find wifi signal then, do this. 
+echo "options rtl8723be ant_sel=2" | sudo tee -a /etc/modprobe.d/rtl8723be.conf
+restart, then your wifi should work
+hope these help to resolved Realtek RTL8723BE PCIe Wireless driver on Ubuntu or Linux Mint. 
