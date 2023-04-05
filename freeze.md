@@ -10,6 +10,10 @@ Change display manager to **lightdm**:
 sudo dpkg-reconfigure gdm3
 ```
 
+Check the display-manager status:
+```bash
+systemctl status display-manager
+```
 
 Verify that your display manager has changed to `/usr/sbin/lightdm`:
 ```bash
