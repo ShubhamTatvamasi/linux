@@ -1,4 +1,4 @@
-# freeze
+# lightdm
 
 Install LightDM display manager:
 ```bash
